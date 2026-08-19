@@ -13,14 +13,18 @@ st.set_page_config(
 st.title("⚡ Cloud-Native Adaptive MLOps Concept Drift Mitigation Engine")
 st.markdown("**Event-Driven Feature-Partitioned Sub-Ensemble Selective Retraining**")
 
-# Automatically locate the artifacts folder regardless of folder nesting
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-if os.path.exists(os.path.join(BASE_DIR, "artifacts")):
-    ARTIFACTS_DIR = os.path.join(BASE_DIR, "artifacts")
-elif os.path.exists(os.path.join(BASE_DIR, "fraud-drift-mlops", "artifacts")):
-    ARTIFACTS_DIR = os.path.join(BASE_DIR, "fraud-drift-mlops", "artifacts")
-else:
-    ARTIFACTS_DIR = os.path.join(BASE_DIR, "..", "artifacts")
+# Recursive directory search to automatically locate the folder containing the model artifacts
+def get_artifacts_directory():
+    target_file = "submodel_1_rf.joblib"
+    search_roots = ["/mount/src", os.path.abspath(".")]
+    for base in search_roots:
+        if os.path.exists(base):
+            for root, dirs, files in os.walk(base):
+                if target_file in files:
+                    return root
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "artifacts")
+
+ARTIFACTS_DIR = get_artifacts_directory()
 
 @st.cache_resource
 def load_all_artifacts():
