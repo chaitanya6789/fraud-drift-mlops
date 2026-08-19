@@ -18,7 +18,11 @@ st.markdown(
 
 # Resolve Base Path Dynamically
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ARTIFACTS_DIR = os.path.join(BASE_DIR, "artifacts")
+ARTIFACTS_DIR = os.path.join(
+    BASE_DIR, "fraud-drift-mlops", "artifacts"
+) if os.path.exists(
+    os.path.join(BASE_DIR, "fraud-drift-mlops", "artifacts")
+) else os.path.join(BASE_DIR, "artifacts")
 
 
 @st.cache_resource
